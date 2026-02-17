@@ -1,101 +1,96 @@
-# NO2 Probability Density Modeling
+# NO₂ Probability Density Modeling
 
 ## Project Overview
 
-This project models the NO₂ air quality feature using a roll-number-based nonlinear transformation and learns a Gaussian-form probability density function (PDF) from the transformed data.
+This project analyzes the statistical behavior of the NO₂ air quality feature by applying a roll-number-dependent nonlinear transformation and learning its probability density function. To ensure reliable modeling, a robust drift stabilization step is performed before estimating the parameters of a Gaussian distribution.
 
 The notebook demonstrates:
 
-- Robust drift reduction using median and interquartile range (IQR)
-- Feature engineering using mathematical transformation
-- Parametric density estimation using Maximum Likelihood Estimation (MLE)
-- Statistical modeling of real-world environmental data
-- Visualization and validation of the learned probability distribution
+- Stabilizing feature distribution using robust drift reduction (median–IQR method)
+- Applying a personalized nonlinear mathematical transformation
+- Learning Gaussian distribution parameters from data using Maximum Likelihood Estimation (MLE)
+- Visual comparison between empirical data distribution and learned probability model
+- Understanding probabilistic representation of real-world environmental data
 
 ---
 
 ## Objective
 
-Given NO₂ values \(x\), apply the transformation:
+The goal is to transform the NO₂ feature using a roll-number-controlled nonlinear function and estimate the parameters of a Gaussian probability density function that best describes the transformed feature.
 
-\[
+The transformation applied is:
+
+$$
 z = x + a_r \sin(b_r x)
-\]
+$$
 
-Where:
+where:
 
-\[
-a_r = 0.05 \cdot (r \bmod 7), \quad b_r = 0.3 \cdot (r \bmod 5 + 1)
-\]
+$$
+a_r = 0.05 \times (r \bmod 7)
+$$
 
-Then estimate the Gaussian-form probability density function:
+$$
+b_r = 0.3 \times \left( (r \bmod 5) + 1 \right)
+$$
 
-\[
+After transformation, the probability density function is modeled as:
+
+$$
 \hat{p}(z) = c \cdot e^{-\lambda (z - \mu)^2}
-\]
+$$
 
-Where parameters \(\mu\), \(\lambda\), and \(c\) are learned from data.
+where:
+
+- $\mu$ represents the mean of the transformed data  
+- $\lambda = \frac{1}{2\sigma^2}$ controls the spread of the distribution  
+- $c = \frac{1}{\sqrt{2\pi}\sigma}$ ensures proper normalization  
 
 ---
 
 ## Methodology
 
-### 1. Data Preprocessing and Drift Reduction
+### 1. Data Preparation and Drift Stabilization
 
-- Remove missing NO₂ values
-- Apply robust drift reduction using median and IQR to stabilize the distribution and reduce outlier influence
-
-\[
-x_{stable} = \frac{x - \text{median}}{\text{IQR}}
-\]
+- Load NO₂ values from dataset
+- Remove missing entries
+- Apply median–IQR scaling to stabilize the distribution and reduce drift caused by outliers
 
 ---
 
 ### 2. Feature Transformation
 
-Apply roll-number-parameterized nonlinear transformation:
-
-\[
-z = x_{stable} + a_r \sin(b_r x_{stable})
-\]
-
-This introduces controlled nonlinearity and personalized feature transformation.
+- Apply sinusoidal transformation using parameters derived from roll number
+- Introduce controlled nonlinear variation while preserving feature structure
 
 ---
 
-### 3. Statistical PDF Learning (MLE)
+### 3. Parameter Estimation
 
-Estimate Gaussian parameters using Maximum Likelihood Estimation:
-
-- Mean (\(\mu\))
-- Variance (\(\sigma^2\))
-- Lambda (\(\lambda = \frac{1}{2\sigma^2}\))
-- Normalization constant (\(c\))
-
-This fully defines the probability density function.
+- Compute mean and variance of transformed feature
+- Derive Gaussian distribution parameters using Maximum Likelihood Estimation
+- Construct the probability density function using estimated parameters
 
 ---
 
-### 4. Visualization and Validation
+### 4. Visualization and Verification
 
 - Plot histogram of transformed feature
-- Plot learned Gaussian PDF
-- Compare empirical distribution with theoretical model
-
-This validates the accuracy of probabilistic modeling.
+- Overlay learned Gaussian probability density curve
+- Evaluate how well the distribution represents the data
 
 ---
 
 ## Key Concepts Demonstrated
 
-- Drift reduction for stable statistical modeling
+- Drift stabilization in data preprocessing
 - Nonlinear feature transformation
-- Probability density estimation using MLE
-- Gaussian distribution modeling
-- Statistical learning from real-world data
+- Gaussian probability density modeling
+- Maximum Likelihood Estimation
+- Statistical characterization of real-world data
 
 ---
 
 ## Conclusion
 
-This project demonstrates robust probability density modeling of NO₂ air quality data by applying drift reduction, nonlinear transformation, and Gaussian parameter estimation, ensuring accurate and reliable statistical representation of the data.
+This project demonstrates how drift-stabilized feature transformation and statistical estimation techniques can be used to construct a reliable probabilistic model of NO₂ air quality data, enabling accurate representation of its underlying distribution.
